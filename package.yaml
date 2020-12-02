@@ -46,3 +46,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - advent-of-code-twenty-twenty
+    - hspec >= 2.7.0 && < 2.8.0
