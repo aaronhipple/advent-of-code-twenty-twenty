@@ -1,0 +1,48 @@
+name:                advent-of-code-twenty-twenty
+version:             0.1.0.0
+github:              "aaronhipple/advent-of-code-twenty-twenty"
+license:             BSD3
+author:              "Aaron Hipple"
+maintainer:          "ahipple@gmail.com"
+copyright:           "Aaron Hipple"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/aaronhipple/advent-of-code-twenty-twenty#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- containers >= 0.6.2.1 && < 0.7.0.0
+
+library:
+  source-dirs: src
+
+executables:
+  advent:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - advent-of-code-twenty-twenty
+
+tests:
+  test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - advent-of-code-twenty-twenty
