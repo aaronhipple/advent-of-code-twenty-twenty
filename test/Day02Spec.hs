@@ -12,6 +12,10 @@ part1input = unlines
   , "2-9 c: ccccccccc"
   ]
 
-spec = describe "run02a" $ do
-  it "produces the expected output" $ do
-    run01a part1input `shouldBe` Just 2
+spec = describe "Day 2" $ do
+  describe "run02a" $ do
+    it "produces the expected output" $ do
+      run02a part1input `shouldBe` Just 2
+  describe "run02b" $ do
+    it "produces the expected output" $ do
+      run02b part1input `shouldBe` Just 1
