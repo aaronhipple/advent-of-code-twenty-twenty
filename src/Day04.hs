@@ -3,7 +3,6 @@
 module Day04 (day04, run04a, run04b) where
 
 import Parsing
-import Debug.Trace
 import Data.Maybe
 import Data.Char
 import qualified Data.Set as Set
@@ -87,7 +86,15 @@ data EyeColor = Amber | Blue | Brown | Gray | Green | Hazel | Other
 
 toPassport :: PassportData -> Maybe Passport
 toPassport (PassportData pairs) = case validated of
-  (Just byr_, Just iyr_, Just eyr_, Just hgt_, Just hcl_, Just ecl_, Just pid_, cid_) -> Just $ Passport byr_ iyr_ eyr_ hgt_ hcl_ ecl_ pid_ cid_
+  ( Just byr_
+    , Just iyr_
+    , Just eyr_
+    , Just hgt_
+    , Just hcl_
+    , Just ecl_
+    , Just pid_
+    , cid_
+    ) -> Just $ Passport byr_ iyr_ eyr_ hgt_ hcl_ ecl_ pid_ cid_
   _ -> Nothing
   where
     validated =
