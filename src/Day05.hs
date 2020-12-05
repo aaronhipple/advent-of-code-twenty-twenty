@@ -25,7 +25,7 @@ run05b input = map withId $ nonEmptyRows $ Set.toList $ allSeats `Set.difference
 nonEmptyRows :: [(Int, Int)] -> [(Int, Int)]
 nonEmptyRows seats = 
   [ (row, col)
-  | (row, cols) <- filter (\(row, cols) -> Set.size cols /= 8) $ Map.toList rowMap
+  | (row, cols) <- filter (\(_, cols) -> Set.size cols /= 8) $ Map.toList rowMap
   , col <- Set.toList cols
   ]
   where
