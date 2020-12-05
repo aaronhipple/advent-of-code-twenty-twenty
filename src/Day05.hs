@@ -5,6 +5,7 @@ module Day05 (day05, run05a, run05b, decodeSeat) where
 import Data.List (foldl')
 import qualified Data.Set as Set
 
+day05 :: String -> String
 day05 input = unlines
   [ "Part 1: " ++ (show $ run05a input)
   , "Part 2: " ++ (show $ run05b input)
@@ -22,24 +23,32 @@ run05b input = map withId $ inMiddle $ Set.toList $ allSeats `Set.difference` fi
     allSeats = Set.fromList [(a, b) | a <- [0..127], b <- [0..7]]
     filledSeats = Set.fromList $ decodeSeat <$> lines input
     
-
 seatId :: (Int, Int) -> Int
 seatId (row, column) = (row * 8) + column
 
 decodeSeat :: String -> (Int, Int)
-decodeSeat xs = fix $ foldl' f (allRows, allCols) xs
-  where
-    fix ((rowL, rowH), (colL, colH))
-      | rowL == rowH && colL == colH = (rowL, colL)
-      | otherwise = error "Range not narrowed, instructions incomplete"
+decodeSeat xs = fromRanges $ foldl' partition (allRows, allCols) xs
+
+fromRanges :: ((Int, Int), (Int, Int)) -> (Int, Int)
+fromRanges ((rowL, rowH), (colL, colH))
+  | rowL == rowH && colL == colH = (rowL, colL)
+  | otherwise = error "Range not narrowed, instructions incomplete"
       
-    f (rowRange, colRange) 'F' = (lowerHalf rowRange, colRange)
-    f (rowRange, colRange) 'B' = (upperHalf rowRange, colRange)
-    f (rowRange, colRange) 'R' = (rowRange, upperHalf colRange)
-    f (rowRange, colRange) 'L' = (rowRange, lowerHalf colRange)
+partition :: ((Int, Int), (Int, Int)) -> Char -> ((Int, Int), (Int, Int))
+partition (rowRange, colRange) 'F' = (lowerHalf rowRange, colRange)
+partition (rowRange, colRange) 'B' = (upperHalf rowRange, colRange)
+partition (rowRange, colRange) 'R' = (rowRange, upperHalf colRange)
+partition (rowRange, colRange) 'L' = (rowRange, lowerHalf colRange)
+partition _ _ = error "unexpected input"
 
-    lowerHalf (a, b) = (a, b - (range `div` 2)) where range = (b - a) + 1
-    upperHalf (a, b) = (a + (range `div` 2), b) where range = (b - a) + 1
+lowerHalf :: (Int, Int) -> (Int, Int)
+lowerHalf (a, b) = (a, b - (range `div` 2)) where range = (b - a) + 1
+  
+upperHalf :: (Int, Int) -> (Int, Int)
+upperHalf (a, b) = (a + (range `div` 2), b) where range = (b - a) + 1
 
+allRows :: (Int, Int)
 allRows = (0, 127)
+  
+allCols :: (Int, Int)
 allCols = (0, 7)
