@@ -22,11 +22,6 @@ run check x = case runParse lines x of
 run02a = run checkPolicyA
 run02b = run checkPolicyB
 
-runParse :: Parser a -> String -> Maybe a
-runParse p xs = case parse p xs of
-  [(a, [])] -> Just a
-  _ -> Nothing
-
 checkPolicyA :: Policy -> String -> Bool
 checkPolicyA (Policy (minC, maxC, c)) password = minC <= countC && countC <= maxC
   where

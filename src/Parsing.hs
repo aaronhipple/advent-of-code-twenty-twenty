@@ -10,6 +10,11 @@ import Data.Char
 
 newtype Parser a = P (String -> [(a,String)])
 
+runParse :: Parser a -> String -> Maybe a
+runParse p inp = case parse p inp of
+  [(result, [])] -> Just result
+  _ -> Nothing
+
 parse :: Parser a -> String -> [(a,String)]
 parse (P p) inp = p inp
 
@@ -99,6 +104,12 @@ int = do char '-'
 
 -- Handling spacing
 
+eof :: Parser ()
+eof = P (f)
+  where
+    f "" = [((), "")]
+    f _ = []
+
 space :: Parser ()
 space = do many (sat isSpace)
            return ()
@@ -120,3 +131,10 @@ integer = token int
 
 symbol :: String -> Parser String
 symbol xs = token (string xs)
+
+-- Util
+
+skip :: Parser a -> Parser ()
+skip p = do
+  p
+  return ()
