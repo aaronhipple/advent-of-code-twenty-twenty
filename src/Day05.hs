@@ -4,6 +4,7 @@ module Day05 (day05, run05a, run05b, decodeSeat) where
 
 import Data.List (foldl')
 import qualified Data.Set as Set
+import qualified Data.Map.Strict as Map
 
 day05 :: String -> String
 day05 input = unlines
@@ -15,14 +16,22 @@ run05a :: String -> Int
 run05a input = maximum $ seatId <$> decodeSeat <$> lines input
 
 run05b :: String -> [(Int, Int, Int)]
-run05b input = map withId $ inMiddle $ Set.toList $ allSeats `Set.difference` filledSeats
+run05b input = map withId $ nonEmptyRows $ Set.toList $ allSeats `Set.difference` filledSeats
   where
-    inMiddle = filter f -- TODO generalize, this was determined experimentally
-      where f (row, _) = row > 5 && row < 100
     withId seat@(row, col) = (row, col, seatId seat)
     allSeats = Set.fromList [(a, b) | a <- [0..127], b <- [0..7]]
     filledSeats = Set.fromList $ decodeSeat <$> lines input
-    
+
+nonEmptyRows :: [(Int, Int)] -> [(Int, Int)]
+nonEmptyRows seats = 
+  [ (row, col)
+  | (row, cols) <- filter (\(row, cols) -> Set.size cols /= 8) $ Map.toList rowMap
+  , col <- Set.toList cols
+  ]
+  where
+    rowMap = foldl' f Map.empty seats
+    f m (row, col) = Map.insertWith Set.union row (Set.singleton col) m
+
 seatId :: (Int, Int) -> Int
 seatId (row, column) = (row * 8) + column
 
