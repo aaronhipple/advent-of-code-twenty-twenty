@@ -35,29 +35,33 @@ nonEmptyRows seats =
 seatId :: (Int, Int) -> Int
 seatId (row, column) = (row * 8) + column
 
+data Range a = R a a
+
 decodeSeat :: String -> (Int, Int)
 decodeSeat xs = fromRanges $ foldl' partition (allRows, allCols) xs
 
-fromRanges :: ((Int, Int), (Int, Int)) -> (Int, Int)
-fromRanges ((rowL, rowH), (colL, colH))
-  | rowL == rowH && colL == colH = (rowL, colL)
-  | otherwise = error "Range not narrowed, instructions incomplete"
+toSingle :: Eq a => Range a -> a
+toSingle (R a b) = if a == b then a
+                   else error "Range has not been narrowed to a single value."
+
+fromRanges :: Eq a => (Range a, Range a) -> (a, a)
+fromRanges (ra, rb) = (toSingle ra, toSingle rb)
       
-partition :: ((Int, Int), (Int, Int)) -> Char -> ((Int, Int), (Int, Int))
+partition :: (Range Int, Range Int) -> Char -> (Range Int, Range Int)
 partition (rowRange, colRange) 'F' = (lowerHalf rowRange, colRange)
 partition (rowRange, colRange) 'B' = (upperHalf rowRange, colRange)
 partition (rowRange, colRange) 'R' = (rowRange, upperHalf colRange)
 partition (rowRange, colRange) 'L' = (rowRange, lowerHalf colRange)
 partition _ _ = error "unexpected input"
 
-lowerHalf :: (Int, Int) -> (Int, Int)
-lowerHalf (a, b) = (a, b - (range `div` 2)) where range = (b - a) + 1
+lowerHalf :: Range Int -> Range Int
+lowerHalf (R a b) = R a (b - (range `div` 2)) where range = (b - a) + 1
   
-upperHalf :: (Int, Int) -> (Int, Int)
-upperHalf (a, b) = (a + (range `div` 2), b) where range = (b - a) + 1
+upperHalf :: Range Int -> Range Int
+upperHalf (R a b) = R (a + (range `div` 2)) b where range = (b - a) + 1
 
-allRows :: (Int, Int)
-allRows = (0, 127)
+allRows :: Range Int
+allRows = R 0 127
   
-allCols :: (Int, Int)
-allCols = (0, 7)
+allCols :: Range Int
+allCols = R 0 7
