@@ -22,20 +22,13 @@ run06a = run allAnswersDisjunctive
   
 run06b :: String -> Int
 run06b = run allAnswersConjunctive
-    
-personAnswers :: Parser (Set Char)
-personAnswers = do
-  answers <- some alphanum
-  skip (char '\n') <|> eof
-  return $ Set.fromList answers
   
 allAnswers :: ([Set Char] -> Set Char) -> Parser [Set Char]
 allAnswers collect = some groupAnswers
  where 
-  groupAnswers = do
-    persons <- some personAnswers
-    skip (char '\n') <|> eof
-    return $ collect persons
+  groupAnswers = collect <$> some personAnswers <* separator
+  personAnswers = Set.fromList <$> some alphanum <* separator
+  separator = skip (char '\n') <|> eof
 
 allAnswersDisjunctive :: Parser [Set Char]
 allAnswersDisjunctive = allAnswers $ foldr Set.union Set.empty
