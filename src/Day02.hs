@@ -23,31 +23,20 @@ run02a = run checkPolicyA
 run02b = run checkPolicyB
 
 checkPolicyA :: Policy -> String -> Bool
-checkPolicyA (Policy (minC, maxC, c)) password = minC <= countC && countC <= maxC
+checkPolicyA (Policy minC maxC c) password = minC <= countC && countC <= maxC
   where
     countC = length $ filter (==c) password
 
 checkPolicyB :: Policy -> String -> Bool
-checkPolicyB (Policy (posA, posB, c)) password = (charA == c && charB /= c) || (charA /= c && charB == c)
+checkPolicyB (Policy posA posB c) password = (charA == c && charB /= c) || (charA /= c && charB == c)
   where
     charA = password !! (posA - 1)
     charB = password !! (posB - 1)
 
-newtype Policy = Policy (Int, Int, Char)
+data Policy = Policy Int Int Char
 
 pol :: Parser Policy
-pol = do
-  minC <- nat
-  char '-'
-  maxC <- nat
-  space
-  c <- letter
-  return $ Policy (minC, maxC, c)
+pol = Policy <$> nat <* char '-' <*> nat <* space <*> letter
 
 line :: Parser (Policy, String)
-line = do
-  policy <- pol
-  char ':'
-  space
-  password <- token identifier
-  return $ (policy, password)
+line = (,) <$> pol <* char ':' <* space <*> token identifier

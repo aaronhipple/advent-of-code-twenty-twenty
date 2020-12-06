@@ -40,29 +40,19 @@ data DataPair = DataPair
   
 passports = many passport
   
-passport = do
-  pairs <- some pdata
-  skip (char '\n') <|> eof
-  return $ PassportData pairs
+passport = PassportData <$> some pdata <* (skip (char '\n') <|> eof)
 
 dataPair :: String -> Parser DataPair
-dataPair tag = do
-  string tag
-  string ":"
-  value <- many $ sat (invert isSpace)
-  return $ DataPair tag value
+dataPair tag = DataPair tag <$> (string tag *> string ":" *> (many $ sat (invert isSpace)))
   
-pdata = do
-  pair <- (dataPair "byr"
+pdata = (dataPair "byr"
         <|> dataPair "iyr"
         <|> dataPair "eyr"
         <|> dataPair "hgt"
         <|> dataPair "hcl"
         <|> dataPair "ecl"
         <|> dataPair "pid"
-        <|> dataPair "cid")
-  skip (char ' ' <|> char '\n') <|> eof
-  return pair
+        <|> dataPair "cid") <* (skip (char ' ' <|> char '\n') <|> eof)
 
 invert :: (a -> Bool) -> a -> Bool
 invert pred a = not $ pred a
@@ -126,14 +116,11 @@ validateInRange (low, high) n
 mkhgt :: String -> Maybe (Int, LengthUnit)
 mkhgt inp = runParse p inp >>= validate
   where
-    p = do
-      qty <- int
-      unit <- lengthUnit
-      return (qty, unit)
+    p = (,) <$> int <*> lengthUnit
 
     lengthUnit = inch <|> cm
-    inch = string "in" >> pure Inch
-    cm = string "cm" >> pure Centimeter
+    inch = string "in" *> pure Inch
+    cm = string "cm" *> pure Centimeter
 
     validate ht@(n, Inch) = if n >= 59 && n <= 76 then Just ht else Nothing
     validate ht@(n, Centimeter) = if n >= 150 && n <= 193 then Just ht else Nothing
