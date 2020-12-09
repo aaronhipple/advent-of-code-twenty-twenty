@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4bbd3daf9b8caca0ac73459c43b34d78a1da0ebe1c79ac6f6a7d2042ef931b99
+-- hash: 9d48d982de1f7cb2c02b06c12011c2ed668776ee5f3a4166b807dcaddb7d08b3
 
 name:           advent-of-code-twenty-twenty
 version:        0.1.0.0
@@ -33,6 +33,7 @@ library
       Day05
       Day06
       Day07
+      Day08
       Lib
       Parsing
   other-modules:
@@ -42,6 +43,7 @@ library
   build-depends:
       base >=4.7 && <5
     , containers >=0.6.2.1 && <0.7.0.0
+    , mtl >=2.2.2 && <2.3.0
   default-language: Haskell2010
 
 executable advent
@@ -55,6 +57,7 @@ executable advent
       advent-of-code-twenty-twenty
     , base >=4.7 && <5
     , containers >=0.6.2.1 && <0.7.0.0
+    , mtl >=2.2.2 && <2.3.0
   default-language: Haskell2010
 
 test-suite test
@@ -67,6 +70,7 @@ test-suite test
       Day05Spec
       Day06Spec
       Day07Spec
+      Day08Spec
       Paths_advent_of_code_twenty_twenty
   hs-source-dirs:
       test
@@ -76,4 +80,5 @@ test-suite test
     , base >=4.7 && <5
     , containers >=0.6.2.1 && <0.7.0.0
     , hspec >=2.7.0 && <2.8.0
+    , mtl >=2.2.2 && <2.3.0
   default-language: Haskell2010

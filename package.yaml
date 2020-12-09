@@ -21,6 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/aaro
 dependencies:
 - base >= 4.7 && < 5
 - containers >= 0.6.2.1 && < 0.7.0.0
+- mtl >= 2.2.2 && < 2.3.0
 
 library:
   source-dirs: src
