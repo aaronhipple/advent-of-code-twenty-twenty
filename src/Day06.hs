@@ -21,6 +21,12 @@ run06b = run allAnswersConjunctive
 run :: Parser [Set Char] -> String -> Int
 run parser input = sum $ Set.size <$> (maybe [] id $ runParse parser input)
   
+allAnswersDisjunctive :: Parser [Set Char]
+allAnswersDisjunctive = allAnswers $ foldr Set.union Set.empty
+
+allAnswersConjunctive :: Parser [Set Char]
+allAnswersConjunctive = allAnswers $ \(p:ps) -> foldr Set.intersection p ps
+
 allAnswers :: ([Set Char] -> Set Char) -> Parser [Set Char]
 allAnswers collect = some groupAnswers
  where 
@@ -28,9 +34,4 @@ allAnswers collect = some groupAnswers
   personAnswers = Set.fromList <$> some alphanum <* separator
   separator = skip (char '\n') <|> eof
 
-allAnswersDisjunctive :: Parser [Set Char]
-allAnswersDisjunctive = allAnswers $ foldr Set.union Set.empty
-
-allAnswersConjunctive :: Parser [Set Char]
-allAnswersConjunctive = allAnswers $ \(p:ps) -> foldr Set.intersection p ps
 
