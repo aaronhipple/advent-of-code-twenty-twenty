@@ -47,8 +47,6 @@ findRange target ns = take ((j - i) + 1) $ drop i $ ns
     scan = scanl1 f
     f :: (Int, Int, Int) -> (Int, Int, Int) -> (Int, Int, Int)
     f (i1, _, a) (_, j2, b) = (i1, j2, a + b)
-    
-  
 
 getInts :: String -> [Int]
 getInts = map read . lines

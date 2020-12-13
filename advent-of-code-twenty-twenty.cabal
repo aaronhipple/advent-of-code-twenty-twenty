@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bd274666d21ec10c3ec2eca14e1a81442a73be2e8989640ecad64c71259ed907
+-- hash: 52977b6d073e3736aadf741fc2b032827aece5ed5ddb17e6704b542fae081524
 
 name:           advent-of-code-twenty-twenty
 version:        0.1.0.0
@@ -35,6 +35,7 @@ library
       Day07
       Day08
       Day09
+      Day10
       Lib
       Parsing
   other-modules:
@@ -73,6 +74,7 @@ test-suite test
       Day07Spec
       Day08Spec
       Day09Spec
+      Day10Spec
       Paths_advent_of_code_twenty_twenty
   hs-source-dirs:
       test

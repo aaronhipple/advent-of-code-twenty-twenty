@@ -11,6 +11,7 @@ import Day06
 import Day07
 import Day08
 import Day09
+import Day10
 
 runDay :: Int -> String -> Either String String
 runDay 1 x = Right $ day01 x
@@ -22,4 +23,5 @@ runDay 6 x = Right $ day06 x
 runDay 7 x = Right $ day07 x
 runDay 8 x = Right $ day08 x
 runDay 9 x = Right $ day09 x
+runDay 10 x = Right $ day10 x
 runDay _ _ = Left "Unknown Day"
