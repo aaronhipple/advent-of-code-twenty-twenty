@@ -43,17 +43,17 @@ run10b input = show $ findWays allNs
 findWays :: [Int] -> Int
 findWays ns = ways !! 0
   where
-    ways = map countWays $ zip [0..] rawWays
+    ways = countWays <$> zip [0..] rawWays
   
     countWays (i, nways)
-      | i == max_i = 1
+      | isLast = 1
       | otherwise = sum $ (ways !!) <$> nextIndices
         where
-          nextIndices = map (+ i) [1 .. nways]
-
-    max_i = length rawWays - 1
+          nextIndices = (+ i) <$> [1 .. nways]
+          isLast = i == length rawWays - 1
       
-    rawWays = map f $ filter (not . null) (tails ns)
-    f [] = 0
-    f [_] = 1
-    f (x:xs) = length $ takeWhile (<= (x + 3)) xs
+    rawWays = f <$> filter (not . null) (tails ns)
+      where
+        f [] = 0
+        f [_] = 1
+        f (x:xs) = length $ takeWhile (<= (x + 3)) xs
