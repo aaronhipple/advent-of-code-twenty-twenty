@@ -40,6 +40,7 @@ run10b input = show $ findWays allNs
     ns = read <$> lines input
 
 -- assumes input is sorted
+findWays :: [Int] -> Int
 findWays ns = ways !! 0
   where
     ways = map countWays $ zip [0..] rawWays
@@ -53,5 +54,6 @@ findWays ns = ways !! 0
     max_i = length rawWays - 1
       
     rawWays = map f $ filter (not . null) (tails ns)
-    f (n:ns) = length $ takeWhile (<= (n + 3)) ns
-
+    f [] = 0
+    f [_] = 1
+    f (x:xs) = length $ takeWhile (<= (x + 3)) xs
